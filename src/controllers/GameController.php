@@ -120,16 +120,43 @@ class GameController extends Controller
 
     public function checkFight()
     {
-        $_SESSION['combattants'] = $_POST['combattants'];
         header('Content-Type: application/json');
+        $_SESSION['combattants'] = $_POST['combattants'];
         echo json_encode(['success' => true]);
     }
 
-    public function fight() {
+    public function startFight()
+    {
+        header('Content-Type: application/json');
+
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+
+        $damage = $data['damage'] ?? "not defined";
+        $attaquantId = $data['attaquantId'] ?? "not defined";
+        $opponentId = $data['opponentId'] ?? "not defined";
+        $attaque = $data['attaque'] ?? "not defined";
+
+        echo json_encode([
+            'success' => true,
+            'damage' => $damage,
+            'attaquantId' => $attaquantId,
+            'opponentId' => $opponentId,
+            'attaque' => $attaque,
+        ]);
+    }
+
+    public function fight()
+    {
         $manager = new EntityManager("combattant");
 
-        $combattant1 = $manager->join($_SESSION['combattants'][0]);
-        $combattant2 = $manager->join($_SESSION['combattants'][1]);
+        if (empty($_SESSION)) {
+            echo "Vous n'avez aucun combat en cours";
+            return;
+        }
+
+        $combattant1 = $manager->joinCombattantAptitude($_SESSION['combattants'][0]);
+        $combattant2 = $manager->joinCombattantAptitude($_SESSION['combattants'][1]);
 
         $this->renderPhpView("combat.php", ["combattant1" => $combattant1, "combattant2" => $combattant2]);
     }

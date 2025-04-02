@@ -11,6 +11,7 @@ class Router
         "/highestLevel" => "GameController@highestLevel",
         "/random-combat" => "GameController@randomFight",
         "/api/combatCheck" => "GameController@checkFight",
+        "/api/startFight" => "GameController@startFight",
         "/combat" => "GameController@fight",
     ];
 
