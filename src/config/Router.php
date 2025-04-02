@@ -10,7 +10,8 @@ class Router
         "/highestPv" => "GameController@highestPv",
         "/highestLevel" => "GameController@highestLevel",
         "/random-combat" => "GameController@randomFight",
-        "/"
+        "/api/combatCheck" => "GameController@checkFight",
+        "/combat" => "GameController@fight",
     ];
 
     public function dispatch($requestUri)

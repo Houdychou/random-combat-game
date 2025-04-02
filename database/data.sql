@@ -102,16 +102,16 @@ CREATE TABLE `combattant`
 
 INSERT INTO `combattant` (`Id`, `nom`, `force`, `sante`, `niveau`, `id_style`)
 VALUES (1, 'Bruce Lee', 95, 95, 18, 1),
-       (2, 'Muhammad Ali', 90, 100, 17, 2),
+       (2, 'Muhammad Ali', 85, 100, 16, 2),
        (3, 'Mike Tyson', 98, 92, 19, 2),
-       (4, 'Georges St-Pierre', 92, 110, 16, 3),
+       (4, 'Georges St-Pierre', 85, 100, 16, 3),
        (5, 'Khabib Nurmagomedov', 93, 120, 17, 4),
        (6, 'Conor McGregor', 88, 105, 15, 5),
        (7, 'Anderson Silva', 89, 108, 16, 6),
-       (8, 'Jon Jones', 96, 115, 97, 7),
+       (8, 'Jon Jones', 96, 115, 10, 7),
        (9, 'Fedor Emelianenko', 94, 118, 17, 1),
        (10, 'Chuck Liddell', 87, 102, 14, 2),
-       (11, 'Ronda Rousey', 85, 100, 13, 8);
+       (11, 'Ronda Rousey', 85, 108, 13, 8);
 
 
 

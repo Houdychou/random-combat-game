@@ -78,8 +78,6 @@ class GameController extends Controller
         }
 
         $gainNiveau = rand(1, 2);
-        $gainSante = rand(1, 5);
-        $gainForce = rand(1, 10);
 
         if ($c1["sante"] <= 0 && $c2["sante"] <= 0) {
             $vainqueur = "Match nul";
@@ -89,15 +87,10 @@ class GameController extends Controller
             $perdant = $c1;
 
             $vainqueur["niveau"] += $gainNiveau;
-            $vainqueur["sante"] += $gainSante;
-            $vainqueur["force"] += $gainForce;
 
             $endCombat = "Combat terminé! " . $perdant["nom"] . " est KO!";
-
             $manager->update($vainqueur["Id"], [
                 "niveau" => $vainqueur["niveau"],
-                "force" => $vainqueur["force"],
-                "sante" => $vainqueur["sante"]
             ]);
         } else {
             $manager = new EntityManager("combattant");
@@ -107,13 +100,9 @@ class GameController extends Controller
             $endCombat = "Combat terminé! " . $perdant["nom"] . " est KO!";
 
             $vainqueur["niveau"] += $gainNiveau;
-            $vainqueur["sante"] += $gainSante;
-            $vainqueur["force"] += $gainForce;
 
             $manager->update($vainqueur["Id"], [
                 "niveau" => $vainqueur["niveau"],
-                "force" => $vainqueur["force"],
-                "sante" => $vainqueur["sante"]
             ]);
         }
 
@@ -124,10 +113,24 @@ class GameController extends Controller
                 "commentaries" => $commentaries,
                 "vainqueur" => $vainqueur,
                 "gainNiveau" => $gainNiveau,
-                "gainSante" => $gainSante,
-                "gainForce" => $gainForce,
                 "perdant" => $perdant,
                 "endCombat" => $endCombat
             ]);
+    }
+
+    public function checkFight()
+    {
+        $_SESSION['combattants'] = $_POST['combattants'];
+        header('Content-Type: application/json');
+        echo json_encode(['success' => true]);
+    }
+
+    public function fight() {
+        $manager = new EntityManager("combattant");
+
+        $combattant1 = $manager->join($_SESSION['combattants'][0]);
+        $combattant2 = $manager->join($_SESSION['combattants'][1]);
+
+        $this->renderPhpView("combat.php", ["combattant1" => $combattant1, "combattant2" => $combattant2]);
     }
 }
