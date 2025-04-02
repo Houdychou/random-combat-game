@@ -44,7 +44,6 @@ class GameController extends Controller
         $c2 = $combattants[1];
 
         $commentaries = [];
-
         $nb = rand(0, 10);
 
         if ($nb === 5) {
@@ -78,28 +77,57 @@ class GameController extends Controller
             }
         }
 
-        $commentaries[] = "Combat terminé! ";
+        $gainNiveau = rand(1, 2);
+        $gainSante = rand(1, 5);
+        $gainForce = rand(1, 10);
 
         if ($c1["sante"] <= 0 && $c2["sante"] <= 0) {
             $vainqueur = "Match nul";
         } else if ($c1["sante"] <= 0) {
             $manager = new EntityManager("combattant");
-            $vainqueur = $c2["nom"];
-            $c2["niveau"] += 1;
-            $manager->updateLevel($c2["Id"], $c2["niveau"]);
+            $vainqueur = $c2;
+            $perdant = $c1;
+
+            $vainqueur["niveau"] += $gainNiveau;
+            $vainqueur["sante"] += $gainSante;
+            $vainqueur["force"] += $gainForce;
+
+            $endCombat = "Combat terminé! " . $perdant["nom"] . " est KO!";
+
+            $manager->update($vainqueur["Id"], [
+                "niveau" => $vainqueur["niveau"],
+                "force" => $vainqueur["force"],
+                "sante" => $vainqueur["sante"]
+            ]);
         } else {
             $manager = new EntityManager("combattant");
-            $vainqueur = $c1["nom"];
-            $c1["niveau"] += 1;
-            $manager->updateLevel($c1["Id"], $c1["niveau"]);
+            $vainqueur = $c1;
+            $perdant = $c2;
+
+            $endCombat = "Combat terminé! " . $perdant["nom"] . " est KO!";
+
+            $vainqueur["niveau"] += $gainNiveau;
+            $vainqueur["sante"] += $gainSante;
+            $vainqueur["force"] += $gainForce;
+
+            $manager->update($vainqueur["Id"], [
+                "niveau" => $vainqueur["niveau"],
+                "force" => $vainqueur["force"],
+                "sante" => $vainqueur["sante"]
+            ]);
         }
 
-        $this->renderPhpView("combat.php",
+        $this->renderPhpView("random-combat.php",
             [
                 "c1" => $c1,
                 "c2" => $c2,
                 "commentaries" => $commentaries,
-                "vainqueur" => $vainqueur
+                "vainqueur" => $vainqueur,
+                "gainNiveau" => $gainNiveau,
+                "gainSante" => $gainSante,
+                "gainForce" => $gainForce,
+                "perdant" => $perdant,
+                "endCombat" => $endCombat
             ]);
     }
 }

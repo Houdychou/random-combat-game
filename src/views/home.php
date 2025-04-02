@@ -32,7 +32,7 @@
     </div>
 
     <div class="text-center mb-10">
-        <a href="/combat"
+        <a href="/random-combat"
            class="w-[300px] text-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-full shadow transition">
             <i class="ri-refresh-line"></i> Combat aléatoire
         </a>

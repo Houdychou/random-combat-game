@@ -35,12 +35,23 @@ class EntityManager extends Database
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function updateLevel($id, $level)
+    public function update($id, $data)
     {
-        $sql = "UPDATE `" . $this->table . "` SET `niveau` = :level WHERE `Id` = :id";
+        $fields = [];
+        $values = [':id' => $id];
+
+        foreach ($data as $key => $value) {
+            $fields[] = "`$key` = :$key";
+            $values[":$key"] = $value;
+        }
+
+        $sql = "UPDATE `" . $this->table . "` SET " . implode(', ', $fields) . " WHERE `Id` = :id";
         $stmt = $this->getConnection()->prepare($sql);
-        $stmt->bindParam(':id', $id);
-        $stmt->bindParam(':level', $level);
+
+        foreach ($values as $param => $val) {
+            $stmt->bindValue($param, $val);
+        }
+
         $stmt->execute();
     }
 }
