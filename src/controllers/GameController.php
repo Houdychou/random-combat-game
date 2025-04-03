@@ -146,8 +146,14 @@ class GameController extends Controller
         $opponentHealth = $data["opponentHealth"] ?? "not defined";
 
         $userManager = new entityManager("combattant");
+        $aptitudeManager = new entityManager("aptitude");
 
         $winner = $userManager->findById($attaquantId);
+        $loser = $userManager->findById($opponentId);
+        $attaqueNom = $aptitudeManager->findById($attaque);
+
+        $commentaries = [];
+        $commentaries[] = $winner["nom"] . " attaque " . $loser["nom"] . " via " . $attaqueNom["nom"] . "!";
 
         if ($opponentHealth <= 0) {
             $resultManager = new EntityManager("resultat");
@@ -173,6 +179,7 @@ class GameController extends Controller
             'opponentId' => $opponentId,
             'attaque' => $attaque,
             'opponentHealth' => $opponentHealth,
+            "commentaires" => $commentaries,
         ]);
     }
 

@@ -6,47 +6,53 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Bebas Neue', sans-serif;
-        }
-
-        .vs-text {
-            animation: pulseVs 1s infinite alternate;
-        }
-
-        @keyframes pulseVs {
-            0% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0.6; transform: scale(1.2); }
-        }
-
-        main {
-            animation: fadeInMain 1.5s ease-in;
-        }
-
-        @keyframes fadeInMain {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        bebas: ["'Bebas Neue'", "sans-serif"]
+                    },
+                    animation: {
+                        pulseSlow: 'pulse 2s ease-in-out infinite',
+                        fadeIn: 'fadeIn 0.8s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: 0, transform: 'translateY(10px)' },
+                            '100%': { opacity: 1, transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        };
+    </script>
 </head>
 
-<body class="bg-gradient-to-br from-black via-gray-950 to-gray-900 min-h-screen text-white relative">
+<body class="bg-gradient-to-br from-black via-gray-950 to-gray-900 min-h-screen text-white font-bebas">
 
-<main class="max-w-7xl mx-auto px-4 py-12">
+<main class="max-w-7xl mx-auto px-4 py-12 animate-fadeIn">
     <h1 class="text-6xl font-extrabold text-center text-red-600 mb-14 tracking-widest drop-shadow-[0_0_30px_rgba(255,0,0,0.7)]">
         <span class="text-orange-500 animate-pulse"><?= htmlspecialchars($combattant1[0]['name']) ?></span>
-        <span class="vs-text mx-6 text-5xl text-gray-100 drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">VS</span>
+        <span class="mx-6 text-5xl text-gray-100 drop-shadow-[0_0_15px_rgba(255,255,255,0.5)] animate-pulse">VS</span>
         <span class="text-blue-500 animate-pulse"><?= htmlspecialchars($combattant2[0]['name']) ?></span>
     </h1>
 
+    <div class="fight-logs flex flex-col gap-4 max-h-[300px] overflow-y-auto p-4 bg-gray-800/30 rounded-xl shadow-inner mb-10">
+        <h3 class="text-3xl">Déroulement du match :</h3>
+    </div>
+
+    <h1 class="turn text-4xl text-center font-extrabold mb-10 tracking-wide text-yellow-400 animate-pulseSlow drop-shadow-[0_0_15px_rgba(250,204,21,0.8)]"></h1>
+
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        <form method="POST" class="bg-gradient-to-br from-gray-900 to-black rounded-2xl p-8 shadow-[0_0_25px_#dc2626] border-2 border-red-700 hover:border-red-500 transition">
+        <form method="POST" id="1" class="bg-gradient-to-br from-gray-900 to-black rounded-2xl p-8 shadow-[0_0_25px_#dc2626] border-2 border-red-700 hover:border-red-500 transition">
+            <div class="flex justify-end mb-2">
+                <span class="inline-block text-lg bg-black text-white px-3 py-1 rounded-full border border-white shadow">Combattant N°<?= $combattant1[0]['id'] ?></span>
+            </div>
             <input type="hidden" class="sante" value="<?= htmlspecialchars($combattant1[0]['sante']) ?>">
             <h2 class="text-4xl font-bold text-orange-400 text-center mb-4"><?= htmlspecialchars($combattant1[0]['name']) ?></h2>
             <p class="text-center text-red-300 text-xl mb-6 health">
-                <i class="ri-heart-3-fill mr-1 text-red-600"></i>Santé :
-                <?= htmlspecialchars($combattant1[0]['sante']) ?>
+                <i class="ri-heart-3-fill mr-1 text-red-600"></i>Santé : <?= htmlspecialchars($combattant1[0]['sante']) ?>
             </p>
 
             <input type="hidden" class="attaquant" name="attaquant" value="<?= $combattant1[0]['id'] ?>">
@@ -64,12 +70,14 @@
             </div>
         </form>
 
-        <form method="POST" class="bg-gradient-to-br from-gray-900 to-black rounded-2xl p-8 shadow-[0_0_25px_#3b82f6] border-2 border-blue-700 hover:border-blue-500 transition">
+        <form method="POST" id="2" class="bg-gradient-to-br from-gray-900 to-black rounded-2xl p-8 shadow-[0_0_25px_#3b82f6] border-2 border-blue-700 hover:border-blue-500 transition">
+            <div class="flex justify-end mb-2">
+                <span class="inline-block text-lg bg-black text-white px-3 py-1 rounded-full border border-white shadow">Combattant N°<?= $combattant2[0]['id'] ?></span>
+            </div>
             <input type="hidden" class="sante" value="<?= htmlspecialchars($combattant2[0]['sante']) ?>">
             <h2 class="text-4xl font-bold text-blue-400 text-center mb-4"><?= htmlspecialchars($combattant2[0]['name']) ?></h2>
             <p class="text-center text-blue-200 text-xl mb-6 health">
-                <i class="ri-heart-3-fill mr-1 text-red-600"></i>Santé :
-                <?= htmlspecialchars($combattant2[0]['sante']) ?>
+                <i class="ri-heart-3-fill mr-1 text-red-600"></i>Santé : <?= htmlspecialchars($combattant2[0]['sante']) ?>
             </p>
 
             <input type="hidden" class="attaquant" name="attaquant" value="<?= $combattant2[0]['id'] ?>">

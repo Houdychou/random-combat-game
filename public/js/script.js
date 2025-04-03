@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         errorText.innerHTML = "";
-
         const formData = new FormData(form);
 
         const xhr = new XMLHttpRequest();

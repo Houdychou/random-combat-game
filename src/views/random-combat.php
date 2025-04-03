@@ -65,7 +65,6 @@
 
 <body class="bg-gradient-to-br from-black via-gray-900 to-gray-800 min-h-screen text-white py-10 px-4 relative">
 
-<!-- ✅ Intro animée -->
 <div class="intro-screen">
     <h1>⚡ Combat aléatoire lancé !</h1>
 </div>

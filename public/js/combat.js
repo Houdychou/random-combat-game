@@ -1,36 +1,32 @@
 document.addEventListener("DOMContentLoaded", function () {
     const forms = document.querySelectorAll("form");
+    const logsZone = document.querySelector(".fight-logs");
+    const playerTurn = document.querySelector(".turn");
 
-    // ✅ Écran "K.O."
     const koScreen = document.createElement("div");
     koScreen.className = "fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 text-8xl font-extrabold text-red-600";
     koScreen.style.display = "none";
-    koScreen.innerText = "K.O.";
+    koScreen.innerText = "Combat terminé! ";
     document.body.appendChild(koScreen);
 
-    // ✅ Compte à rebours
-    const countdownOverlay = document.createElement("div");
-    countdownOverlay.className = "fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 text-7xl font-bold text-white";
-    document.body.appendChild(countdownOverlay);
+    const randomStart = Math.random() < 0.5 ? "1" : "2";
+    const startingForm = document.getElementById(randomStart);
+    let currentTurnId = startingForm.querySelector(".attaquant").value;
 
-    const countdown = ["3", "2", "1", "FIGHT!"];
-    let index = 0;
+    forms.forEach(form => {
+        const attaquantId = form.querySelector(".attaquant").value;
+        const boutons = form.querySelectorAll("button");
 
-    const showCountdown = () => {
-        countdownOverlay.innerText = countdown[index];
-        if (index < countdown.length - 1) {
-            index++;
-            setTimeout(showCountdown, 1000);
+        if (attaquantId !== currentTurnId) {
+            boutons.forEach(btn => btn.disabled = true);
+            form.style.opacity = "0.5";
         } else {
-            setTimeout(() => {
-                countdownOverlay.remove();
-            }, 1000);
+            playerTurn.innerHTML = "Au joueur " + randomStart + " de jouer";
+            boutons.forEach(btn => btn.disabled = false);
+            form.style.opacity = "1";
         }
-    };
+    });
 
-    showCountdown();
-
-    // ✅ Gestion des attaques
     forms.forEach(form => {
         form.addEventListener("submit", function (e) {
             e.preventDefault();
@@ -76,7 +72,37 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
 
                     if (!response.success) {
+                        console.error("Erreur d'action:", response);
                         return;
+                    }
+
+                    if (currentTurnId === response.opponentId) {
+                        currentTurnId = response.attaquantId;
+                    } else {
+                        currentTurnId = response.opponentId;
+                    }
+
+                    forms.forEach(form => {
+                        const attaquantId = form.querySelector(".attaquant").value;
+                        const boutons = form.querySelectorAll("button");
+
+                        if (attaquantId !== currentTurnId) {
+                            playerTurn.innerHTML = "Au joueur 1 de jouer";
+                            boutons.forEach(btn => btn.disabled = true);
+                            form.style.opacity = "0.5";
+                        } else {
+                            playerTurn.innerHTML = "Au joueur 2 de jouer";
+                            boutons.forEach(btn => btn.disabled = false);
+                            form.style.opacity = "1";
+                        }
+                    });
+
+                    if (response.commentaires) {
+                        const p = document.createElement("p");
+                        p.className = "bg-yellow-100/10 border-l-4 border-yellow-400 px-4 py-2 rounded text-yellow-300 shadow-md text-xl animate-fadeIn";
+                        p.textContent = response.commentaires[0];
+                        logsZone.appendChild(p);
+                        logsZone.scrollTop = logsZone.scrollHeight;
                     }
 
                     if (response.opponentId === opponentId) {
