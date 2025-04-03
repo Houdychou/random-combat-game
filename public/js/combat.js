@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const koScreen = document.createElement("div");
     koScreen.className = "fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 text-8xl font-extrabold text-red-600";
     koScreen.style.display = "none";
-    koScreen.innerText = "Combat terminé! ";
     document.body.appendChild(koScreen);
 
     const randomStart = Math.random() < 0.5 ? "1" : "2";
@@ -65,6 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     if (response.message === "Game Over!") {
                         koScreen.style.display = "flex";
+                        koScreen.innerHTML = response.data["nom"] + " gagne le combat !";
                         setTimeout(() => {
                             window.location.href = "/";
                         }, 2500);
@@ -109,9 +109,11 @@ document.addEventListener("DOMContentLoaded", function () {
                         const opponentHealthInput = opponentForm.querySelector(".sante");
                         if (opponentHealthInput) {
                             opponentHealthInput.value = newHealth;
-                            const healthDisplay = opponentForm.querySelector(".health");
-                            if (healthDisplay) {
-                                healthDisplay.innerHTML = `<i class="ri-heart-3-fill mr-1 text-red-500"></i>Santé : ${newHealth}`;
+                            const healthValueDisplay = opponentForm.querySelector(".health-value");
+                            const healthBar = opponentForm.querySelector(".health-bar");
+                            if (healthBar && healthValueDisplay) {
+                                healthValueDisplay.textContent = newHealth;
+                                healthBar.style.width = newHealth + "%";
                             }
                         }
                     }

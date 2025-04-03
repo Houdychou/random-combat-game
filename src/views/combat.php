@@ -51,9 +51,16 @@
             </div>
             <input type="hidden" class="sante" value="<?= htmlspecialchars($combattant1[0]['sante']) ?>">
             <h2 class="text-4xl font-bold text-orange-400 text-center mb-4"><?= htmlspecialchars($combattant1[0]['name']) ?></h2>
-            <p class="text-center text-red-300 text-xl mb-6 health">
-                <i class="ri-heart-3-fill mr-1 text-red-600"></i>Santé : <?= htmlspecialchars($combattant1[0]['sante']) ?>
-            </p>
+
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-1 text-sm">
+                    <span class="text-red-300"><i class="ri-heart-3-fill mr-1 text-red-600"></i>Santé</span>
+                    <span class="text-red-100 health-value"><?= htmlspecialchars($combattant1[0]['sante']) ?></span>
+                </div>
+                <div class="w-full bg-red-900 rounded-full h-4 overflow-hidden">
+                    <div class="health-bar bg-red-500 h-full rounded-lg" style="width: <?= htmlspecialchars($combattant1[0]['sante']) ?>%;"></div>
+                </div>
+            </div>
 
             <input type="hidden" class="attaquant" name="attaquant" value="<?= $combattant1[0]['id'] ?>">
             <input type="hidden" class="opponent" name="opponent" value="<?= $combattant2[0]['id'] ?>">
@@ -76,9 +83,16 @@
             </div>
             <input type="hidden" class="sante" value="<?= htmlspecialchars($combattant2[0]['sante']) ?>">
             <h2 class="text-4xl font-bold text-blue-400 text-center mb-4"><?= htmlspecialchars($combattant2[0]['name']) ?></h2>
-            <p class="text-center text-blue-200 text-xl mb-6 health">
-                <i class="ri-heart-3-fill mr-1 text-red-600"></i>Santé : <?= htmlspecialchars($combattant2[0]['sante']) ?>
-            </p>
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-1 text-sm">
+                    <span class="text-blue-200"><i class="ri-heart-3-fill mr-1 text-red-600"></i>Santé</span>
+                    <span class="text-blue-100 health-value"><?= htmlspecialchars($combattant2[0]['sante']) ?></span>
+                </div>
+                <div class="w-full bg-blue-900 rounded-full h-4 overflow-hidden">
+                    <div class="health-bar bg-blue-500 h-full rounded-lg" style="width: <?= htmlspecialchars($combattant2[0]['sante']) ?>%;"></div>
+                </div>
+            </div>
+
 
             <input type="hidden" class="attaquant" name="attaquant" value="<?= $combattant2[0]['id'] ?>">
             <input type="hidden" class="opponent" name="opponent" value="<?= $combattant1[0]['id'] ?>">
