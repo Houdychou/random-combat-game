@@ -142,7 +142,7 @@ class GameController extends Controller
         $damage = $data['damage'] ?? "not defined";
         $attaquantId = $data['attaquantId'] ?? "not defined";
         $opponentId = $data['opponentId'] ?? "not defined";
-        $attaque = $data['attaque'] ?? "not defined";
+        $attaqueId = $data['attaqueId'] ?? "not defined";
         $opponentHealth = $data["opponentHealth"] ?? "not defined";
 
         $userManager = new entityManager("combattant");
@@ -150,10 +150,10 @@ class GameController extends Controller
 
         $winner = $userManager->findById($attaquantId);
         $loser = $userManager->findById($opponentId);
-        $attaqueNom = $aptitudeManager->findById($attaque);
+        $attaqueNom = $aptitudeManager->findById($attaqueId);
 
         $commentaries = [];
-        $commentaries[] = $winner["nom"] . " attaque " . $loser["nom"] . " via " . $attaqueNom["nom"] . "!";
+        $commentaries[] = $winner["nom"] . " attaque " . $loser["nom"] . " via " . $attaqueNom["nom"] . " !";
 
         if ($opponentHealth <= 0) {
             $resultManager = new EntityManager("resultat");
@@ -168,7 +168,7 @@ class GameController extends Controller
         $roundManager = new EntityManager("round");
         $roundManager->create([
             "id_combat" => $combatId,
-            "id_aptitude" => $attaque,
+            "id_aptitude" => $attaqueId,
             "id_combattant" => $attaquantId
         ]);
 
@@ -177,7 +177,7 @@ class GameController extends Controller
             'damage' => $damage,
             'attaquantId' => $attaquantId,
             'opponentId' => $opponentId,
-            'attaque' => $attaque,
+            'attaqueId' => $attaqueId,
             'opponentHealth' => $opponentHealth,
             "commentaires" => $commentaries,
         ]);

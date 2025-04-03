@@ -29,6 +29,8 @@ document.addEventListener("DOMContentLoaded", function () {
     forms.forEach(form => {
         form.addEventListener("submit", function (e) {
             e.preventDefault();
+            const boutons = form.querySelectorAll("button");
+            boutons.forEach(btn => btn.disabled = true);
 
             const damage = e.submitter.querySelector(".damage");
             const damageValue = damage.value;
@@ -57,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     const response = JSON.parse(xhr.responseText);
 
                     if (response.message === "no combat") {
-                        alert("Aucun combat actif trouvé. Redirection vers l'accueil.");
+                        alert("Aucun combat trouvé.");
                         window.location.href = "/";
                         return;
                     }
@@ -127,7 +129,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 damage: damageValue,
                 attaquantId: attaquantId,
                 opponentId: opponentId,
-                attaque: attaqueName,
+                attaqueId: attaqueName,
                 opponentHealth: newHealth
             }));
         });
