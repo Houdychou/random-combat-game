@@ -122,12 +122,27 @@ class GameController extends Controller
     {
         header('Content-Type: application/json');
         $_SESSION['combattants'] = $_POST['combattants'];
-        echo json_encode(['success' => true]);
+
+        $combatManager = new EntityManager("combat");
+
+        $combatId = $combatManager->create([
+            "id_combattant_1" => $_SESSION['combattants'][0],
+            "id_combattant_2" => $_SESSION['combattants'][1],
+        ]);
+
+        $_SESSION["combatId"] = $combatId;
+        return json_encode(['success' => true]);
     }
 
     public function startFight()
     {
         header('Content-Type: application/json');
+
+        if (!isset($_SESSION["combatId"])) {
+            return json_encode(['success' => false, "message" => "no combat"]);
+        }
+
+        $combatId = $_SESSION["combatId"];
 
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
@@ -136,13 +151,37 @@ class GameController extends Controller
         $attaquantId = $data['attaquantId'] ?? "not defined";
         $opponentId = $data['opponentId'] ?? "not defined";
         $attaque = $data['attaque'] ?? "not defined";
+        $opponentHealth = $data["opponentHealth"] ?? "not defined";
 
-        echo json_encode([
+        $userManager = new entityManager("combattant");
+
+        $winner = $userManager->findById($attaquantId);
+
+        if ($opponentHealth <= 0) {
+
+            $resultManager = new EntityManager("resultat");
+            $resultManager->create([
+                "id_combat" => $combatId,
+                "gagnant" => $attaquantId
+            ]);
+            session_destroy();
+            return json_encode(['message' => 'Game Over!', "data" => $winner]);
+        }
+
+        $roundManager = new EntityManager("round");
+        $roundManager->create([
+            "id_combat" => $combatId,
+            "id_aptitude" => $attaque,
+            "id_combattant" => $attaquantId
+        ]);
+
+        return json_encode([
             'success' => true,
             'damage' => $damage,
             'attaquantId' => $attaquantId,
             'opponentId' => $opponentId,
             'attaque' => $attaque,
+            'opponentHealth' => $opponentHealth,
         ]);
     }
 
@@ -151,8 +190,8 @@ class GameController extends Controller
         $manager = new EntityManager("combattant");
 
         if (empty($_SESSION)) {
-            echo "Vous n'avez aucun combat en cours";
-            return;
+            header("location: /");
+            exit();
         }
 
         $combattant1 = $manager->joinCombattantAptitude($_SESSION['combattants'][0]);

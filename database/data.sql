@@ -77,8 +77,7 @@ VALUES (1, 1, 2),
        (2, 3, 4),
        (3, 5, 6),
        (4, 7, 8),
-       (5, 9, 10),
-       (6, 11, 1);
+       (5, 9, 10);
 
 -- --------------------------------------------------------
 
@@ -295,6 +294,9 @@ ALTER TABLE `combat`
   ADD KEY `id_combattant_1` (`id_combattant_1`),
   ADD KEY `id_combattant_2` (`id_combattant_2`);
 
+-- 1. Supprimer la contrainte actuelle sur round.id_combat
+
+
 --
 -- Index pour la table `combattant`
 --
@@ -393,16 +395,19 @@ ALTER TABLE `combattant_aptitude`
 -- Contraintes pour la table `resultat`
 --
 ALTER TABLE `resultat`
-    ADD CONSTRAINT `resultat_ibfk_1` FOREIGN KEY (`id_combat`) REFERENCES `combat` (`Id`),
-  ADD CONSTRAINT `resultat_ibfk_2` FOREIGN KEY (`gagnant`) REFERENCES `combattant` (`Id`);
+    ADD CONSTRAINT `resultat_ibfk_1`
+        FOREIGN KEY (`id_combat`) REFERENCES `combat`(`Id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `resultat_ibfk_2`
+    FOREIGN KEY (`gagnant`) REFERENCES `combattant`(`Id`);
+
 
 --
 -- Contraintes pour la table `round`
 --
 ALTER TABLE `round`
-    ADD CONSTRAINT `round_ibfk_1` FOREIGN KEY (`id_combat`) REFERENCES `combat` (`Id`),
-  ADD CONSTRAINT `round_ibfk_2` FOREIGN KEY (`id_aptitude`) REFERENCES `aptitude` (`Id`),
-  ADD CONSTRAINT `round_ibfk_3` FOREIGN KEY (`id_combattant`) REFERENCES `combattant` (`Id`);
+    ADD CONSTRAINT `round_ibfk_1` FOREIGN KEY (`id_combat`) REFERENCES `combat` (`Id`) ON DELETE CASCADE,
+    ADD CONSTRAINT `round_ibfk_2` FOREIGN KEY (`id_aptitude`) REFERENCES `aptitude` (`Id`),
+    ADD CONSTRAINT `round_ibfk_3` FOREIGN KEY (`id_combattant`) REFERENCES `combattant` (`Id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

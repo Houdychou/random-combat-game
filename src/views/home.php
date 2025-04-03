@@ -47,7 +47,7 @@
                 <input type="submit" id="submitBtn"
                        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow-lg hover:shadow-blue-500/40 transition"
                        value="⚔️ Combattre">
-            <?php else: ?>
+            <?php elseif(!empty($_SESSION["combatId"])) : ?>
                 <div>
                     <input type="submit" id="submitBtn"
                            class="bg-blue-600 cursor-pointer hover:bg-blue-700 text-white px-6 py-2 rounded-lg shadow-lg transition"

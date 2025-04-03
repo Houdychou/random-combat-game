@@ -5,12 +5,26 @@ document.addEventListener("DOMContentLoaded", function () {
         form.addEventListener("submit", function (e) {
             e.preventDefault();
 
+
             const damage = e.submitter.querySelector(".damage");
-            const damageValue = damage ? damage.value : 0;
+            const damageValue = parseInt(damage.value);
 
             const attaquantId = form.querySelector(".attaquant").value;
             const opponentId = form.querySelector(".opponent").value;
             const attaqueName = e.submitter.value;
+
+            const opponentForm = Array.from(forms).find(f =>
+                f.querySelector(".attaquant").value === opponentId
+            );
+
+            let newHealth = null;
+            if (opponentForm) {
+                const opponentHealthInput = opponentForm.querySelector(".sante");
+                if (opponentHealthInput) {
+                    const currentHealth = opponentHealthInput.value;
+                    newHealth = currentHealth - damageValue;
+                }
+            }
 
             const xhr = new XMLHttpRequest();
             xhr.open("POST", "/api/startFight", true);
@@ -18,32 +32,33 @@ document.addEventListener("DOMContentLoaded", function () {
             xhr.onload = function () {
                 if (xhr.status === 200) {
                     const response = JSON.parse(xhr.responseText);
+                    console.log(response)
 
-                    if (!response.success) return;
+                    if (response.message === "no combat") {
+                        alert("Aucun combat actif trouvé. Redirection vers l'accueil.");
+                        window.location.href = "/";
+                        return;
+                    }
 
-                    console.log(response);
+                    if (response.message === "Game Over!") {
+                        alert("Combat terminé! " + response.data["nom"] + " a gagné!")
+                        window.location.href = "/";
+                        return;
+                    }
+
+                    if (!response.success) {
+                        return;
+                    }
 
                     if (response.opponentId === opponentId) {
-                        const opponentForm = Array.from(forms).find(f =>
-                            f.querySelector(".attaquant").value === opponentId
-                        );
-                        if (!opponentForm) {
-                            return;
-                        }
-
                         const opponentHealthInput = opponentForm.querySelector(".sante");
-                        if (!opponentHealthInput) {
-                            return;
-                        }
+                        if (opponentHealthInput) {
+                            opponentHealthInput.value = newHealth;
 
-                        const currentHealth = parseInt(opponentHealthInput.value.trim(), 10);
-                        const newHealth = currentHealth - response.damage;
-
-                        opponentHealthInput.value = newHealth;
-
-                        const healthDisplay = opponentForm.querySelector(".health");
-                        if (healthDisplay) {
-                            healthDisplay.innerHTML = `<i class="ri-heart-3-fill mr-1 text-red-500"></i>Santé : ${newHealth}`;
+                            const healthDisplay = opponentForm.querySelector(".health");
+                            if (healthDisplay) {
+                                healthDisplay.innerHTML = `<i class="ri-heart-3-fill mr-1 text-red-500"></i>Santé : ${newHealth}`;
+                            }
                         }
                     }
                 } else {
@@ -57,7 +72,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 damage: damageValue,
                 attaquantId: attaquantId,
                 opponentId: opponentId,
-                attaque: attaqueName
+                attaque: attaqueName,
+                opponentHealth: newHealth
             }));
         });
     });

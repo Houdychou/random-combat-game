@@ -22,6 +22,40 @@ class EntityManager extends Database
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function findById($id)
+    {
+        $sql = "SELECT * FROM `" . $this->table . "` WHERE `id` = :id";
+        $stmt = $this->getConnection()->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function create($data)
+    {
+        $columns = implode(', ', array_keys($data));
+        $placeholders = ':' . implode(', :', array_keys($data));
+
+        $sql = "INSERT INTO `" . $this->table . "` ($columns) VALUES ($placeholders)";
+        $stmt = $this->getConnection()->prepare($sql);
+
+        foreach ($data as $key => $value) {
+            $stmt->bindValue(":$key", $value);
+        }
+
+        try {
+            $stmt->execute();
+            return $this->getConnection()->lastInsertId();
+        } catch (\PDOException $e) {
+            session_destroy();
+            echo json_encode([
+                'success' => false,
+                'message' => 'no combat'
+            ]);
+            exit();
+        }
+    }
+
     public function joinCombattantAptitude($id)
     {
         $sql = "SELECT c.nom AS 'name', c.sante, c.id, a.nom, a.id AS 'aptitudeId', c1.note, c1.note FROM combattant c INNER JOIN combattant_aptitude c1 ON c.Id = c1.id_combattant INNER JOIN aptitude a ON c1.id_aptitude = a.Id WHERE c.Id = :id";
