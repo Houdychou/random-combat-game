@@ -19,14 +19,6 @@ class GameController extends Controller
         $combattantByForce = $manager->findByHighestSpeciality("force");
         $this->renderPhpView("home.php", ["combattant" => $combattantByForce]);
     }
-
-    public function highestPv()
-    {
-        $manager = new EntityManager("combattant");
-        $combattantByPv = $manager->findByHighestSpeciality("sante");
-        $this->renderPhpView("home.php", ["combattant" => $combattantByPv]);
-    }
-
     public function highestLevel()
     {
         $manager = new EntityManager("combattant");
@@ -158,7 +150,6 @@ class GameController extends Controller
         $winner = $userManager->findById($attaquantId);
 
         if ($opponentHealth <= 0) {
-
             $resultManager = new EntityManager("resultat");
             $resultManager->create([
                 "id_combat" => $combatId,

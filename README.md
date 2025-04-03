@@ -1,12 +1,13 @@
 <h1 align="center">Random Combat Game</h1>
 
 <p align=center>
-    <img src="public/images/github/capture.png" width="512">
+    <img src="public/images/github/capture.png" width="400" height="300">
+  <img src="public/images/github/capture2.png" width="400" height="300">
 </p>
 
 ## À propos
 
-**Random Combat Game** est un jeu de combat aléatoire textuel. Ce projet a été réalisé dans le cadre de mes études à **EDEN School**.
+**Combat Game** est un jeu de combat. Ce projet a été réalisé dans le cadre de mes études à **EDEN School**.
 
 ## Installation
 

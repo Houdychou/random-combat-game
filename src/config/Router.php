@@ -7,7 +7,6 @@ class Router
     private $router = [
         "/" => "GameController@homePage",
         "/highestForce" => "GameController@highestForce",
-        "/highestPv" => "GameController@highestPv",
         "/highestLevel" => "GameController@highestLevel",
         "/random-combat" => "GameController@randomFight",
         "/api/combatCheck" => "GameController@checkFight",
@@ -27,6 +26,7 @@ class Router
                 return $this->executeAction($action, $matches);
             }
         }
+        var_dump("La route n'existe pas");
         return false;
     }
 
